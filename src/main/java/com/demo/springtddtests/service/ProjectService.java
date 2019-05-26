@@ -6,5 +6,5 @@ import com.demo.springtddtests.model.Project;
 public interface ProjectService {
   List<Project> getAllProjects();
 
-  Project getProjectByName(String name);
+  Project getProjectById(Long id);
 }

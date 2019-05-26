@@ -1,40 +1,75 @@
 package com.demo.springtddtests.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.demo.springtddtests.model.Project;
+import com.demo.springtddtests.model.exception.ResourceNotFoundException;
 import com.demo.springtddtests.repository.ProjectRepository;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class) 
 public class ProjectServiceTest {
 
-  @MockBean
-  private static ProjectRepository projectRepository;
+  @Mock
+  private ProjectRepository projectRepository;
   
-  @Autowired
   private ProjectService projectService;
   
   private List<Project> projects; 
   
   @Before
   public void setUp() {
+    projectService = new ProjectServiceImpl(projectRepository);
+        
     projects = new ArrayList<Project>();
-    Project p1 = Project.builder().name("Project 1").build();
-    Project p2 = Project.builder().name("Project 2").build();
+    Project p1 = Project.builder().id(new Long(1)).name("Project 1").build();
+    Project p2 = Project.builder().id(new Long(2)).name("Project 2").build();
     projects.add(p1);
     projects.add(p2);
   }
   
   @Test
-  public void testGetAllProjects() {
+  public void getProjects_ShouldReturnProjectList() throws Exception {
+    Mockito.when(projectRepository.findAll()).thenReturn(projects);
     
+    List<Project> result = projectService.getAllProjects();
+   
+    assertNotNull(result);
+    assertEquals(result.size(), 2);
+  }
+  
+  @Test
+  public void getProjectByName_returnOneProject() throws Exception {
+    Long id = new Long(1);
+    Project testProject = projects.get(0);
+    
+    Mockito.when(projectRepository.findById(id)).thenReturn(Optional.ofNullable(testProject));
+    
+    Project result = projectService.getProjectById(id);
+    
+    assertNotNull(result);
+    assertEquals(result.getId(), testProject.getId());
+    assertEquals(result.getName(), testProject.getName());
+  }
+  
+  @Test(expected = ResourceNotFoundException.class)
+  public void getProject_notFound() throws Exception {
+    Long id = new Long(10000);
+    
+    Mockito.when(projectRepository.findById(id)).thenThrow(new ResourceNotFoundException(""));
+    
+    Project result = projectService.getProjectById(id);
   }
 }

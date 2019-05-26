@@ -15,7 +15,7 @@ import com.demo.springtddtests.model.Project;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ProjectRepositoryTest {
+public class ProjectRepositoryTests {
 
   //Use H2 in memory DB to test ProjectRepository instead of adding data into real DB.
   @Autowired
@@ -37,26 +37,42 @@ public class ProjectRepositoryTest {
   
   // Insert 2 projects and findAll() should return 2 projects.
   @Test
-  public void test_get_all_success() {
+  public void get_all_success() {
       for (Project project: projects) {
         entityManager.persist(project);
       }
       entityManager.flush();
       // when
-      List<Project> found = projectRepository.findAll();
-      assertNotNull(found);
-      assertEquals(found.size(), 2);
+      List<Project> result = projectRepository.findAll();
+      assertNotNull(result);
+      assertEquals(result.size(), 2);
   }
   
   // Persist one project, and findByName should return the project with matching name. 
   @Test
-  public void test_find_by_name_sucess() {
+  public void find_by_name_sucess() {
       Project project = projects.get(0);
       entityManager.persist(project);
       entityManager.flush();
    
-      Project found = projectRepository.findByName(project.getName());
-      assertNotNull(found);
-      assertEquals(found.getName(), project.getName());
+      Project result = projectRepository.findByName(project.getName());
+      assertNotNull(result);
+      assertEquals(result.getName(), project.getName());
+  }
+  
+  
+  @Test
+  public void test() throws Exception {
+    //arrange 
+//    
+//    //act
+//    ResponseEntity<List<Project>> response = restTemplate.exchange("/projects", HttpMethod.GET, null, new ParameterizedTypeReference<List<Project>>() {
+//    });
+//    List<Project> projects = response!=null ? response.getBody() : null;
+//      
+//    //assert
+//    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//    assertNotNull(projects);
+//    assertEquals(projects.size(), 2);
   }
 }
