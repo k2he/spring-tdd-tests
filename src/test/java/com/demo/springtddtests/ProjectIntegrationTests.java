@@ -1,7 +1,6 @@
 package com.demo.springtddtests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.demo.springtddtests.model.Project;
 
-// Integration Tests
+/* 
+ * Integration Tests for Project
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProjectIntegrationTests {
@@ -38,7 +39,7 @@ public class ProjectIntegrationTests {
   public void test_get_ProjectById() throws Exception {
     ResponseEntity<Project> response = restTemplate.getForEntity("/projects/1", Project.class);
     
-    //TODO: 
+    //TODO: If DB is setted up, then we can perform below assert
     //    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     //    assertThat(response.getBody().getId()).isEqualTo("1");
   }
