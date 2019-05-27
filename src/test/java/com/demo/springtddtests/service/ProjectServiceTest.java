@@ -47,7 +47,7 @@ public class ProjectServiceTest {
     List<Project> result = projectService.getAllProjects();
    
     assertNotNull(result);
-    assertEquals(result.size(), 2);
+    assertEquals(2, result.size());
   }
   
   @Test
@@ -60,8 +60,8 @@ public class ProjectServiceTest {
     Project result = projectService.getProjectById(id);
     
     assertNotNull(result);
-    assertEquals(result.getId(), testProject.getId());
-    assertEquals(result.getName(), testProject.getName());
+    assertEquals(testProject.getId(), result.getId());
+    assertEquals(testProject.getName(), result.getName());
   }
   
   @Test(expected = ResourceNotFoundException.class)
@@ -70,6 +70,6 @@ public class ProjectServiceTest {
     
     Mockito.when(projectRepository.findById(id)).thenThrow(new ResourceNotFoundException(""));
     
-    Project result = projectService.getProjectById(id);
+    projectService.getProjectById(id);
   }
 }

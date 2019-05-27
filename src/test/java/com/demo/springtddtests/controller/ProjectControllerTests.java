@@ -1,5 +1,6 @@
 package com.demo.springtddtests.controller;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ public class ProjectControllerTests {
     Mockito.when(projectService.getAllProjects()).thenReturn(projects);
     
     mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()", is(2)));
   }
   
   @Test
@@ -55,7 +57,7 @@ public class ProjectControllerTests {
             .andExpect(status().isOk())
             .andExpect(jsonPath("id").value(1));
   }
-  
+   
   @Test
   public void getProject_notFound() throws Exception {
     String id = "10000";

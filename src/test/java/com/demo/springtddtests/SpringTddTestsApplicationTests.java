@@ -17,21 +17,29 @@ import com.demo.springtddtests.model.Project;
 
 // Integration Tests
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SpringTddTestsApplicationTests {
 
   @Autowired
-  TestRestTemplate restTemplate; 
-  
+  TestRestTemplate restTemplate;
+
   @Test
-  public void test() throws Exception {
-    ResponseEntity<List<Project>> response = restTemplate.exchange("/projects", HttpMethod.GET, null, new ParameterizedTypeReference<List<Project>>() {
-    });
+  public void test_get_AllProjects() throws Exception {
+    ResponseEntity<List<Project>> response = restTemplate.exchange("/projects", HttpMethod.GET,
+        null, new ParameterizedTypeReference<List<Project>>() {});
     List<Project> projects = response != null ? response.getBody() : null;
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     
     // TODO: since I didn't setup data and DB, it can't perform more checks.
-//     assertTrue(projects.size() > 0);
+    // assertTrue(projects.size() > 0);
   }
 
+  @Test
+  public void test_get_ProjectById() throws Exception {
+    ResponseEntity<Project> response = restTemplate.getForEntity("/projects/1", Project.class);
+    
+    //TODO: 
+    //    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    //    assertThat(response.getBody().getId()).isEqualTo("1");
+  }
 }
