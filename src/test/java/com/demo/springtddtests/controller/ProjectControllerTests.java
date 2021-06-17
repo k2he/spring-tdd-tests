@@ -34,16 +34,18 @@ public class ProjectControllerTests {
   @Before
   public void setUp() {
     projects = new ArrayList<Project>();
-    Project p1 = Project.builder().id(new Long(1)).name("Project 1").build();
-    Project p2 = Project.builder().id(new Long(2)).name("Project 2").build();
+    Project p1 = Project.builder().id(Long.valueOf(1)).name("Project 1").build();
+    Project p2 = Project.builder().id(Long.valueOf(2)).name("Project 2").build();
     projects.add(p1);
     projects.add(p2);
   }
   
   @Test
   public void getProjects_ShouldReturnProjectList() throws Exception {
+    // given
     Mockito.when(projectService.getAllProjects()).thenReturn(projects);
-    
+
+    // when, then
     mockMvc.perform(MockMvcRequestBuilders.get("/projects"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()", is(2)));
@@ -51,8 +53,10 @@ public class ProjectControllerTests {
   
   @Test
   public void getProjectByName_ShouldReturnOneProject() throws Exception {
-    Mockito.when(projectService.getProjectById(new Long(1))).thenReturn(projects.get(0));
-    
+    // given
+    Mockito.when(projectService.getProjectById(Long.valueOf(1))).thenReturn(projects.get(0));
+
+    // when, then
     mockMvc.perform(MockMvcRequestBuilders.get("/projects/1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("id").value(1));
@@ -60,9 +64,11 @@ public class ProjectControllerTests {
    
   @Test
   public void getProject_notFound() throws Exception {
+    // given
     String id = "10000";
-    Mockito.when(projectService.getProjectById(new Long(id))).thenThrow(new ResourceNotFoundException(""));
-    
+    Mockito.when(projectService.getProjectById(Long.valueOf(id))).thenThrow(new ResourceNotFoundException(""));
+
+    // when, then
     mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + id))
             .andExpect(status().isNotFound());
   }
