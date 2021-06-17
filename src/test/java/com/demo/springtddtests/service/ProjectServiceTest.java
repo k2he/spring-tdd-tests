@@ -53,21 +53,6 @@ public class ProjectServiceTest {
   }
 
   @Test
-  @DisplayName("call getProjectById() nothing found, should throw ResourceNotFoundException.")
-  public void getProjectById_NothingFoundShould_ThrowException() {
-    // given
-    Mockito.when(projectRepository.findById(any())).thenReturn(Optional.empty());
-
-    // when
-    Throwable exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-      projectService.getProjectById(Long.valueOf(10000));
-    });
-
-    // then
-    assertNotNull(exception);
-  }
-
-  @Test
   public void getProjectByName_returnOneProject() {
     Long id = Long.valueOf(10000);
     Project testProject = projects.get(0);
@@ -93,5 +78,20 @@ public class ProjectServiceTest {
 
     // when
     projectService.getProjectById(id);
+  }
+
+  @Test
+  @DisplayName("call getProjectById() nothing found, should throw ResourceNotFoundException. This is same test as getProject_notFound(). but different way.")
+  public void getProjectById_NothingFoundShould_ThrowException() {
+    // given
+    Mockito.when(projectRepository.findById(any())).thenReturn(Optional.empty());
+
+    // when
+    Throwable exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+      projectService.getProjectById(Long.valueOf(10000));
+    });
+
+    // then
+    assertNotNull(exception);
   }
 }
